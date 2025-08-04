@@ -1,10 +1,17 @@
 import streamlit as st
-import tensorflow as tf
 import numpy as np
 from PIL import Image, ImageDraw
 import pandas as pd
 from streamlit_drawable_canvas import st_canvas
 import os
+
+# Safe TensorFlow import with fallback
+try:
+    import tensorflow as tf
+    TF_AVAILABLE = True
+except ImportError:
+    st.error("🚨 TensorFlow not available. Please check deployment requirements.")
+    TF_AVAILABLE = False
 
 # Configure page
 st.set_page_config(
@@ -16,6 +23,10 @@ st.set_page_config(
 @st.cache_resource
 def load_model():
     """Load the trained model with fallback options"""
+    if not TF_AVAILABLE:
+        st.error("❌ TensorFlow not available. Cannot load model.")
+        return None
+        
     model_files = ["mnist_model.h5", "best_mnist_model.h5"]
     
     for model_file in model_files:
