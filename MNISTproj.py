@@ -2,7 +2,6 @@ import streamlit as st
 import tensorflow as tf
 import numpy as np
 from PIL import Image, ImageDraw
-import cv2
 import pandas as pd
 from streamlit_drawable_canvas import st_canvas
 import os
@@ -24,7 +23,17 @@ def load_model():
             # Use os.path.join for better cross-platform compatibility
             model_path = os.path.join(os.path.dirname(__file__), model_file)
             if os.path.exists(model_path):
-                model = tf.keras.models.load_model(model_path)
+                # Load model with custom objects if needed
+                model = tf.keras.models.load_model(
+                    model_path, 
+                    compile=False  # Skip compilation for faster loading
+                )
+                # Recompile for prediction
+                model.compile(
+                    optimizer='adam',
+                    loss='categorical_crossentropy',
+                    metrics=['accuracy']
+                )
                 st.success(f"✅ Model loaded successfully: {model_file}")
                 return model
         except Exception as e:
