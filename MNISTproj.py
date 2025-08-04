@@ -16,15 +16,23 @@ st.set_page_config(
 
 @st.cache_resource
 def load_model():
-    """Load the trained model"""
-    try:
-        # Use os.path.join for better cross-platform compatibility
-        model_path = os.path.join(os.path.dirname(__file__), "mnist_model.h5")
-        model = tf.keras.models.load_model(model_path)
-        return model
-    except Exception as e:
-        st.error(f"❌ Model file 'mnist_model.h5' not found. Please run 'train_model.py' first. Error: {e}")
-        return None
+    """Load the trained model with fallback options"""
+    model_files = ["mnist_model.h5", "best_mnist_model.h5"]
+    
+    for model_file in model_files:
+        try:
+            # Use os.path.join for better cross-platform compatibility
+            model_path = os.path.join(os.path.dirname(__file__), model_file)
+            if os.path.exists(model_path):
+                model = tf.keras.models.load_model(model_path)
+                st.success(f"✅ Model loaded successfully: {model_file}")
+                return model
+        except Exception as e:
+            st.warning(f"⚠️ Failed to load {model_file}: {e}")
+            continue
+    
+    st.error("❌ No model files found. Available files should be 'mnist_model.h5' or 'best_mnist_model.h5'")
+    return None
 
 def preprocess_canvas_image(canvas_result):
     """Preprocess the drawn image for prediction"""
@@ -54,12 +62,16 @@ def preprocess_canvas_image(canvas_result):
     return None, None
 
 def predict_digit(model, processed_image):
-    """Make prediction on the processed image"""
+    """Make prediction on the processed image with error handling"""
     if processed_image is not None and model is not None:
-        prediction = model.predict(processed_image, verbose=0)
-        predicted_digit = np.argmax(prediction)
-        confidence = np.max(prediction) * 100
-        return predicted_digit, confidence, prediction[0]
+        try:
+            prediction = model.predict(processed_image, verbose=0)
+            predicted_digit = np.argmax(prediction)
+            confidence = np.max(prediction) * 100
+            return predicted_digit, confidence, prediction[0]
+        except Exception as e:
+            st.error(f"❌ Prediction error: {e}")
+            return None, None, None
     return None, None, None
 
 def main():
