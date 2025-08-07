@@ -1,0 +1,23 @@
+#!/bin/bash
+# GitHub Push Commands - Copy and paste these in order
+
+echo "🚀 GITHUB PUSH COMMANDS"
+echo "========================="
+echo ""
+echo "1. First, create a repository at: https://github.com/new"
+echo "   - Name: mnist-digit-recognition"
+echo "   - Public repository"
+echo "   - Don't add README (we have one)"
+echo ""
+echo "2. Replace YOURUSERNAME with your GitHub username and run:"
+echo ""
+echo "git remote add origin https://github.com/YOURUSERNAME/mnist-digit-recognition.git"
+echo "git push -u origin main"
+echo ""
+echo "3. After pushing, go to: https://share.streamlit.io"
+echo "   - Connect your GitHub"
+echo "   - Select: YOURUSERNAME/mnist-digit-recognition"
+echo "   - Main file: demo_app.py (for testing) or MNISTproj.py (for full app)"
+echo "   - Click Deploy!"
+echo ""
+echo "Your 99.43% accuracy MNIST model will be live! 🎉"

@@ -1,2 +1,1 @@
-# Minimal system dependencies
 libglib2.0-0
